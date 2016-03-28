@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html style="height:100%">
+
+
+sfsdfsadfsdfdragonz	gaming fdsf
+
+Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+tempor incididunt ut labore et dolore magna ali`qua. Ut enim ad minim veniam,
+quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+
+<head>
+    {% include "head_base.html" %}
+	<link href="{{STATIC_URL}}libs/bootstrap-3.3.2-dist/css/bootstrap.min.css" rel="stylesheet">
+	<link href="{{STATIC_URL}}libs/font-awesome-4.2.0/css/font-awesome.min.css" type="text/css" rel="stylesheet">
+	<link href="{{STATIC_URL}}css/animations.css" type="text/css" rel="stylesheet">
+	<link href="{{STATIC_URL}}styles/home.css" type="text/css" rel="stylesheet">
+	<link href="{{STATIC_URL}}styles/group.css" type="text/css" rel="stylesheet">
+	<!-- bootstrap for older browsers like ie8 -->
+	<script src="{{ STATIC_URL }}js/html5shiv.min.js"></script>
+	<script src="{{ STATIC_URL }}js/respond.min.js"></script>
+</head>
+
+Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+<body>
+	<nav class="navbar navbar-inverse sidebar" role="navigation">
+    <div class="container-fluid">
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-sidebar-navbar-collapse-1">
+				<span class="sr-only">Toggle navigation</span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</button>
+			
+           	<a class="navbar-brand pull-right" href="{% url 'home' %}">
+			<span>Air Navigation</span>
+			<img style="width:50px;padding-top:5px;float:right;" class="powered_by_logo" src="{{ STATIC_URL }}img/180px-ANCloud.png" />
+			</a>
+		</div>
+		<div class="collapse navbar-collapse" id="bs-sidebar-navbar-collapse-1">
+			<ul class="nav navbar-nav">
+				{% include 'my_account_navbar.html' %}
+				{% if one_group %}
+					{% include 'group_navbar.html' with group=one_group user_membership=one_membership %}
+				{% endif %}
+			</ul>
+		</div>
+	</div>
+	</nav>
+	
+	<div class="main">
+
+		{% if members|length > 0  %}		
+			<div class="well-sm" style="background-color:#ffcb00;color:#8b8b8b;">
+				<div>
+					<h4>How to get the data on your Air Navigation application?</h4>
+					
+					<img src="{{STATIC_URL}}img/tutorial/tutpro2.jpg" width="100%">
+					
+					
+					<!--
+					<div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+					  <ol class="carousel-indicators">
+					    <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
+					    <li data-target="#carousel-example-generic" data-slide-to="1"></li>
+					  </ol>
+					
+					  <div class="carousel-inner" role="listbox">
+					    <div class="item active">
+					      <img src="{{STATIC_URL}}img/tutorial/tut1.png" alt="Image">
+					      <div class="carousel-caption">
+					        Image 1
+					      </div>
+					    </div>
+					    <div class="item">
+					      <img src="{{STATIC_URL}}img/tutorial/tut2.png" alt="Image">
+					      <div class="carousel-caption">
+					        Image 2
+					      </div>
+					    </div>
+					  </div>
+					
+					  <a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">
+					    <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+					    <span class="sr-only">Previous</span>
+					  </a>
+					  <a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next">
+					    <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+					    <span class="sr-only">Next</span>
+					  </a>
+					</div>
+					-->
+				</div>
+			</div>
+		{% endif  %}
+
+
+	<section class="container-fluid" id="section1">
+		
+		{% if to_answer|length > 0  %}
+			<h1 class="text-center">Pending requests</h1>
+			<div class="container well" style="color:black;">
+				<div class="table-responsive">
+					<table class="table table-striped table-bordered table-hover">
+						<th>Group</th>
+						<th>Status</th>
+						<th>Date</th>
+						<th colspan="2">Options</th>
+					{% for member in to_answer %}
+						<tr >
+							<td class="vert-align-middle">{{ member.group.name }} ({{ member.group.group_type }})</td>
+							<td class="vert-align-middle">{{ member.get_status_display }}</td>
+							<td class="vert-align-middle">{{member.date_joined|date:DATE_FORMAT}}</td>
+							<td><a href="{% url 'groups:accept_group_request' token=member.invite_token %}" class="btn btn-success btn-block" type="submit">Accept</a></td>
+							<td><a href="{% url 'groups:reject_group_request' token=member.invite_token %}" class="btn btn-warning btn-block" type="submit">Reject</a></td> 
+						</tr>
+					{% endfor %}
+					</table>
+				</div>	
+			</div>	
+		{% endif %}
+		
+		
+		{% if members|length > 0  %}
+			<h1 class="text-center">Your groups</h1>
+			{% for member in members %}
+				{% include 'group_summary.html' with member=member prod_dpk=member.group.getLastDataPackageReleaseDate test_dpk=member.group.getLastTestDataPackageReleaseDate %}	
+			{% endfor %}
+			<div class="well-sm" style="background-color:#F7F7F7;color:#8b8b8b;">
+				<div class="row alert alert-info multiple_groups_create">
+					<div class="col-sm-8"><p>If you work for several companies, Airnav Cloud can help you manage your data independently for each company. This is why you can create multiple groups.</p></div>
+					<div class="col-sm-4"><button type="button" class="btn btn-success" id="create_new_group_btn">CREATE GROUP</button></div>
+				</div>
+			</div>
+		{% else %}
+			<div class="container well-sm" style="background-color:#F7F7F7;color:#8b8b8b;">
+				<div class="row multiple_groups_create">
+					<div class="col-sm-3"><button type="button" class="btn btn-lg btn-success" id="create_new_group_btn">Create group</button></div>
+					<div class="col-sm-9"><h3 style="font-size:18px;">You are not member of any group.</h3></div>
+				</div>
+			</div>
+		{% endif %}
+	</section>
+
+	{% include 'footer.html' %}
+	
+	</div>
+
+{% include 'base_scripts.html' %}
+
+<script>
+	/* Fix safari go back behaviour */
+	window.onpageshow = function (event) {
+	    if (event.persisted) {
+	    	$.unblockUI();
+	    }
+	};
+	
+	$(document).ready(function() {
+		setNavBarItem("my_account","dashboard");
+		activateNavbarLinks(); // Activate Navbar links
+		initLeftMenuBehaviour();
+		
+		//$('.carousel').carousel();
+		
+		$( "#create_new_group_btn" ).click(function() {
+			document.location = "{% url 'home' %}#section4";
+		});
+	});
+</script>
+
+</body>
+	
+</html>
